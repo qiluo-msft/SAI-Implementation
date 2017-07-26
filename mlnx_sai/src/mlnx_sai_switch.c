@@ -2322,7 +2322,12 @@ static sai_status_t mlnx_switch_parse_fdb_event(uint8_t                         
                sizeof(fdb_events[ii].fdb_entry.mac_address));
 
         if (has_port) {
-            status = mlnx_log_port_to_sai_bridge_port(packet->records_arr[ii].log_port, &port_id);
+            if (fdb_events[ii].event_type == SAI_FDB_EVENT_FLUSHED) {
+                status = mlnx_fdb_flush_event_port_to_bridge_port(packet->records_arr[ii].log_port, &port_id);
+            } else {
+                status = mlnx_log_port_to_sai_bridge_port(packet->records_arr[ii].log_port, &port_id);
+            }
+
             if (SAI_ERR(status)) {
                 return status;
             }

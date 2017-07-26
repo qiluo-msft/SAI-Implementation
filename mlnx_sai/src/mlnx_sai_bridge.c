@@ -360,6 +360,29 @@ sai_status_t mlnx_bridge_rif_to_oid(mlnx_bridge_rif_t *rif, sai_object_id_t *oid
     return mlnx_object_id_to_sai(SAI_OBJECT_TYPE_ROUTER_INTERFACE, &mlnx_rif_obj, oid);
 }
 
+sai_status_t mlnx_fdb_flush_event_port_to_bridge_port(_In_ sx_port_log_id_t  sx_log_port_id,
+                                                      _Out_ sai_object_id_t *port_id)
+{
+    sai_status_t        status;
+    mlnx_object_id_t    mlnx_bport_id = {0};
+    mlnx_bridge_port_t *bridge_port;
+
+    assert(port_id);
+
+    sai_db_read_lock();
+
+    status = mlnx_bridge_port_by_log(sx_log_port_id, &bridge_port);
+    if (!SAI_ERR(status)) {
+        mlnx_bport_id.id.u32 = bridge_port->index;
+    } else {
+        mlnx_bport_id.id.u32 = MAX_BRIDGE_PORTS;
+    }
+
+    sai_db_unlock();
+
+    return mlnx_object_id_to_sai(SAI_OBJECT_TYPE_BRIDGE_PORT, &mlnx_bport_id, port_id);
+}
+
 static sai_status_t check_attrs_port_type(_In_ const sai_object_key_t *key,
                                           _In_ uint32_t                count,
                                           _In_ const sai_attribute_t  *attrs)

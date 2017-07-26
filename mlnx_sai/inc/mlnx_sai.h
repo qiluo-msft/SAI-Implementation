@@ -1061,6 +1061,8 @@ sai_status_t mlnx_bridge_rif_add(sx_router_id_t vrf_id, mlnx_bridge_rif_t **rif)
 sai_status_t mlnx_bridge_rif_del(mlnx_bridge_rif_t *rif);
 sai_status_t mlnx_bridge_rif_by_idx(uint32_t idx, mlnx_bridge_rif_t **rif);
 sai_status_t mlnx_bridge_rif_to_oid(mlnx_bridge_rif_t *rif, sai_object_id_t *oid);
+sai_status_t mlnx_fdb_flush_event_port_to_bridge_port(_In_ sx_port_log_id_t  sx_log_port_id,
+                                                      _Out_ sai_object_id_t *port_id);
 
 sx_mstp_inst_id_t mlnx_stp_get_default_stp();
 sai_status_t mlnx_vlan_stp_bind(sai_vlan_id_t vlan_id, sx_mstp_inst_id_t sx_stp_id);
